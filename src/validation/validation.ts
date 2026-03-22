@@ -211,12 +211,6 @@ export const CreatePostFormSchema = z
      */
     youtubeSettings: z
       .object({
-        title: z.string().trim().max(100, "Title must be at most 100 characters").optional(),
-        description: z
-          .string()
-          .trim()
-          .max(5000, "Description is too long")
-          .optional(),
         privacyStatus: z.enum(["private", "public", "unlisted"]).optional(),
       })
       .optional(),
@@ -300,21 +294,6 @@ export const CreatePostFormSchema = z
         path: ["tiktokSettings", "privacy_level"],
         message: "Privacy level is required for TikTok",
       });
-    }
-
-    /**
-     * If posting to YouTube with video, title becomes required.
-     */
-    if (val.media.kind === "video" && val.targets.youtube) {
-      const title = val.youtubeSettings?.title?.trim();
-
-      if (!title) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["youtubeSettings", "title"],
-          message: "Title is required for YouTube",
-        });
-      }
     }
   });
 

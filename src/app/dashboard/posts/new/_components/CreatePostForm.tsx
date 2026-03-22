@@ -61,7 +61,7 @@ export default function CreatePostForm() {
         disable_stitch: false,
       },
       youtubeSettings: {
-        privacyStatus: "private",
+        privacyStatus: "public",
       },
     },
     mode: "onChange",
