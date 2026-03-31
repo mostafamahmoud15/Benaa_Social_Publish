@@ -260,6 +260,44 @@ export type CreatePostResponse = {
   }
 }
 
+export type RetryPlatform = {
+  failedPlatforms: Platform[];
+  publishedPlatforms: Platform[];
+  idlePlatforms?: Platform[];
+};
+
+export type PostTargets = {
+  facebook: boolean;
+  instagram: boolean;
+  tiktok: boolean;
+  youtube: boolean;
+};
+
+export type PostPublishResults = {
+  facebook: PublishResult;
+  instagram: PublishResult;
+  tiktok: PublishResult;
+  youtube: PublishResult;
+};
+
+export type PostEntity = {
+  _id: string;
+  action: string;
+  caption: string;
+  createdAt: string;
+  updatedAt: string;
+  hashtags: string[];
+  media: ImagesMedia | VideoMedia;
+  publishResults: PostPublishResults;
+  status: string;
+  targets: PostTargets;
+  user: string;
+};
+
+export type RetryPostResponse = {
+  meta: RetryPlatform;
+  post: PostEntity;
+};
 
 
 

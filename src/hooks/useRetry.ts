@@ -4,14 +4,14 @@ import { getErrorMessage } from "@/lib/getErrorMessage";
 import apiCall from "@/services/apiCall";
 import {
   ApiOk,
-  CreatePostResponse,
   Platform,
+  RetryPostResponse,
   TikTokSettings,
 } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-type RetryPostResponseType = ApiOk<CreatePostResponse>;
+type RetryPostResponseType = ApiOk<RetryPostResponse>;
 
 const useRetry = () => {
   const queryClient = useQueryClient();
@@ -34,16 +34,15 @@ const useRetry = () => {
         }
       );
 
-      return data.data;
+      return data;
     },
 
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.posts });
 
-      const meta = res?.meta;
-      const post = res?.post;
+      const meta = res.data?.meta;
+      const post = res.data?.post;
 
-      console.log(post);
       if (!post) {
         toastFlow.error("Failed to retry post publishing.");
         return;
