@@ -146,10 +146,10 @@ export default function Sidebar() {
               <div
                 className={cn(
                   "overflow-hidden whitespace-nowrap transition-[max-width,opacity,margin] duration-300 ease-in-out",
-                  expanded ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
+                  expanded ? "max-w-42 opacity-100" : "max-w-0 opacity-0"
                 )}
               >
-                <h2 className="text-sm font-semibold">Social Publishing</h2>
+                <h2 className="text-sm font-semibold">Benaa Social Publisher</h2>
                 <p className="text-xs text-muted-foreground">Dashboard Panel</p>
               </div>
 
@@ -252,7 +252,7 @@ export default function Sidebar() {
         {/* Drawer header */}
         <div className="flex items-center justify-between border-b p-4">
           <div>
-            <h2 className="text-sm font-semibold">Social Publishing</h2>
+            <h2 className="text-sm font-semibold">Benaa Social Publisher</h2>
             <p className="text-xs text-muted-foreground">Dashboard Panel</p>
           </div>
 

@@ -153,12 +153,12 @@ export default function TermsPage() {
           <p>
             If you have any questions about these Terms of Service, you may
             contact Benaa Social Publisher at{" "}
-            <Link
+            <a
               href="mailto:benaa.social0@gmail.com"
               className="font-medium text-blue-600 underline underline-offset-4"
             >
               benaa.social0@gmail.com
-            </Link>
+            </a>
             .
           </p>
         </section>

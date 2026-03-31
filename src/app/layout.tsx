@@ -3,7 +3,6 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "../../QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "next-themes";
 
 /**
  * Load Montserrat font with selected weights
@@ -17,7 +16,7 @@ const montserratSans = Montserrat({
  * App metadata (SEO)
  */
 export const metadata: Metadata = {
-  title: "Social Publishing Dashboard",
+  title: "Benaa Social Publisher",
   description: "Publish & manage content professionally",
 };
 
@@ -29,8 +28,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={montserratSans.className}>
 
-        {/* Theme provider (light / dark mode) */}
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 
           {/* React Query provider */}
           <QueryProvider>
@@ -41,7 +38,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Toaster richColors closeButton position="top-center" />
 
           </QueryProvider>
-        </ThemeProvider>
       </body>
     </html>
   );

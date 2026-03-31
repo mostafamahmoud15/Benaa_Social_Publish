@@ -25,7 +25,7 @@ export const loginSchema = z.object({
    * Note: In Zod, the common pattern is `z.string().email()`
    * (instead of `z.email()`), depending on your Zod version.
    */
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
 
   /**
    * Password string validated against the project's password policy.
@@ -60,7 +60,7 @@ export const userSchema = z.object({
   /**
    * User email address.
    */
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
 
   /**
    * Role-based access control values supported by the app.
@@ -84,7 +84,7 @@ export type User = z.infer<typeof userSchema>;
  * =========================
  * The post form supports either:
  * - Multiple images (min 1)
- * - A single video (optional in the union, but validated later)
+ * - A single video
  *
  * We use a discriminated union so Zod can narrow the type
  * based on the `kind` field.
@@ -136,11 +136,12 @@ export const CreatePostFormSchema = z
 
     /**
      * Caption is mandatory and trimmed.
+     * If you want drafts without caption later, this can be relaxed.
      */
     caption: z.string().trim().min(1, "Caption is required."),
 
     /**
-     * Final hashtags list used by the form (already validated).
+     * Final hashtags list used by the form.
      * Each tag is trimmed and must not be empty.
      */
     hashtags: z.array(z.string().trim().min(1, "Hashtag cannot be empty")),
@@ -164,7 +165,6 @@ export const CreatePostFormSchema = z
 
     /**
      * Publishing targets (social platforms).
-     * Rule: At least one platform must be selected.
      */
     targets: z.object({
       facebook: z.boolean(),
@@ -174,61 +174,26 @@ export const CreatePostFormSchema = z
     }),
 
     /**
-     * Media input: either images or video (discriminated union).
+     * Media input: either images or video.
      */
     media: MediaInputSchema,
-
-    /**
-     * TikTok-specific settings (optional).
-     * Only required when:
-     * - user selected TikTok
-     * - media.kind === "video"
-     */
-    tiktokSettings: z
-      .object({
-        /**
-         * TikTok privacy setting.
-         * Required only when posting to TikTok (enforced in superRefine).
-         */
-        privacy_level: z
-          .enum(["PUBLIC_TO_EVERYONE", "MUTUAL_FOLLOW_FRIENDS", "SELF_ONLY"])
-          .optional(),
-
-        /**
-         * TikTok toggles.
-         */
-        disable_comment: z.boolean(),
-        disable_duet: z.boolean(),
-        disable_stitch: z.boolean(),
-      })
-      .optional(),
-
-    /**
-     * YouTube-specific settings (optional).
-     * Only required when:
-     * - user selected YouTube
-     * - media.kind === "video"
-     */
-    youtubeSettings: z
-      .object({
-        privacyStatus: z.enum(["private", "public", "unlisted"]).optional(),
-      })
-      .optional(),
   })
   .superRefine((val, ctx) => {
     /**
-     * Cross-field validations live here because they depend on multiple fields,
-     * e.g. targets + media kind + tiktokSettings + youtubeSettings.
+     * Cross-field validations live here because they depend on multiple fields.
      */
 
-    // Ensure at least one target platform is selected.
     const hasTarget =
       val.targets.facebook ||
       val.targets.instagram ||
       val.targets.tiktok ||
       val.targets.youtube;
 
-    if (!hasTarget) {
+    /**
+     * Only require at least one platform when the user is publishing.
+     * Drafts can be saved without selecting any platform.
+     */
+    if (val.action === "publish" && !hasTarget) {
       ctx.addIssue({
         code: "custom",
         path: ["targets"],
@@ -236,7 +201,9 @@ export const CreatePostFormSchema = z
       });
     }
 
-    // Defensive check: images mode should always have at least 1 file.
+    /**
+     * Defensive check: images mode should always have at least 1 file.
+     */
     if (val.media.kind === "images" && val.media.images.length === 0) {
       ctx.addIssue({
         code: "custom",
@@ -280,26 +247,11 @@ export const CreatePostFormSchema = z
         message: "Please select a video",
       });
     }
-
-    /**
-     * If posting to TikTok with video, privacy level becomes required.
-     */
-    if (
-      val.media.kind === "video" &&
-      val.targets.tiktok &&
-      !val.tiktokSettings?.privacy_level
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["tiktokSettings", "privacy_level"],
-        message: "Privacy level is required for TikTok",
-      });
-    }
   });
 
 /**
  * Input type:
- * - Uses the *input* shape BEFORE transforms (e.g. hashtagDraft before normalization)
- * - Useful for form libraries (React Hook Form, Formik, etc.)
+ * - Uses the input shape BEFORE transforms
+ * - Useful for form libraries like React Hook Form
  */
 export type CreatePostFormValues = z.input<typeof CreatePostFormSchema>;

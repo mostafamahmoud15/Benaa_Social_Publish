@@ -50,25 +50,22 @@ export async function proxy(req: NextRequest) {
 
   /**
    * Handle root page "/"
-   * → redirect based on auth state
+   * - if logged in -> dashboard
+   * - if not logged in -> allow home page
    */
   if (isRootPage) {
     if (token) {
       try {
         await getRoleFromToken(token);
-
-        // valid token → go to dashboard
         return redirectTo(req, "/dashboard");
       } catch {
-        // invalid token → clear and go login
-        const response = redirectTo(req, "/login");
+        const response = NextResponse.next();
         response.cookies.delete("token");
         return response;
       }
     }
 
-    // no token → go login
-    return redirectTo(req, "/login");
+    return NextResponse.next();
   }
 
   /**
@@ -84,11 +81,8 @@ export async function proxy(req: NextRequest) {
   if (isAuthPage && token) {
     try {
       await getRoleFromToken(token);
-
-      // already logged in → redirect dashboard
       return redirectTo(req, "/dashboard");
     } catch {
-      // invalid token → clear and allow access
       const response = NextResponse.next();
       response.cookies.delete("token");
       return response;
@@ -109,7 +103,6 @@ export async function proxy(req: NextRequest) {
         return redirectTo(req, "/dashboard");
       }
     } catch {
-      // invalid token → logout
       const response = redirectTo(req, "/login");
       response.cookies.delete("token");
       return response;

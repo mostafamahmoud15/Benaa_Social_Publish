@@ -38,7 +38,7 @@ export default function Home() {
           {/* Small label */}
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs">
             <Sparkles className="h-3.5 w-3.5" />
-            Social Publishing Dashboard
+            Benaa Social Publisher Dashboard
           </div>
 
           {/* Welcome message */}

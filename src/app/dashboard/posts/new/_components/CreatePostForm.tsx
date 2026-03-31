@@ -17,7 +17,6 @@ import PostContentSection from "./PostContentSection";
 import PostMediaSection from "./PostMediaSection";
 import PostTargetsSection from "./PostTargetsSection";
 import {
-  buildYoutubeDescription,
   hasAnySelectedTarget,
 } from "../_lib/create-post.helpers";
 
@@ -60,15 +59,6 @@ export default function CreatePostForm() {
       media: {
         kind: "images",
         images: [],
-      },
-      tiktokSettings: {
-        privacy_level: "PUBLIC_TO_EVERYONE",
-        disable_comment: false,
-        disable_duet: false,
-        disable_stitch: false,
-      },
-      youtubeSettings: {
-        privacyStatus: "public",
       },
     },
     mode: "onChange",
@@ -145,7 +135,6 @@ export default function CreatePostForm() {
      * No need for any extra UI controls.
      */
     const uploaded = await uploadVideo(values.media.video);
-    const youtubeDescription = buildYoutubeDescription(values);
 
     const payload: CreatePostPayload = {
       action,
@@ -153,27 +142,6 @@ export default function CreatePostForm() {
       hashtags: values.hashtags,
       targets: values.targets,
       media: { kind: "video", video: uploaded },
-
-      ...(values.targets.tiktok
-        ? {
-            tiktokSettings: {
-              privacy_level: "PUBLIC_TO_EVERYONE",
-              disable_comment: false,
-              disable_duet: false,
-              disable_stitch: false,
-            },
-          }
-        : {}),
-
-      ...(values.targets.youtube
-        ? {
-            youtubeSettings: {
-              title: values.caption?.trim() || "Untitled video",
-              description: youtubeDescription,
-              privacyStatus: "public",
-            },
-          }
-        : {}),
     };
 
     mutate.mutate({ data: payload });
