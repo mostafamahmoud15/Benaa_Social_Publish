@@ -40,9 +40,10 @@ const useRetry = () => {
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.posts });
 
-      const meta = res.data?.meta;
-      const post = res.data?.post;
+      const meta = res?.meta;
+      const post = res?.post;
 
+      console.log(post);
       if (!post) {
         toastFlow.error("Failed to retry post publishing.");
         return;
