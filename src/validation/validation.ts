@@ -8,16 +8,6 @@ import z from "zod";
  * before sending data to the API.
  */
 
-/**
- * Password Policy (Regex):
- * - Must start with exactly 1 special character from: !@#$%^&*
- * - Followed by at least 3 letters (A-Z / a-z)
- * - Followed by at least 2 digits
- * - Must end with exactly 1 special character from: !@#$%^&*
- *
- * Example valid password: !Abcd12#
- */
-const PASSWORD_REGEX = /^[!@#$%^&*]{1}[A-Za-z]{3,}[0-9]{2,}[!@#$%^&*]{1}$/;
 
 export const loginSchema = z.object({
   /**
@@ -30,12 +20,7 @@ export const loginSchema = z.object({
   /**
    * Password string validated against the project's password policy.
    */
-  password: z
-    .string()
-    .regex(
-      PASSWORD_REGEX,
-      "Password must start/end with a special char, include at least 3 letters and at least 2 digits"
-    ),
+  password: z.string().min(6, "Password must be at least 6 characters long")
 });
 
 export type LoginType = z.infer<typeof loginSchema>;
@@ -70,10 +55,7 @@ export const userSchema = z.object({
   /**
    * Password validated with the same policy used in login.
    */
-  password: z.string().regex(
-    PASSWORD_REGEX,
-    "Password must start/end with a special char, include letters and at least 2 digits"
-  ),
+  password: z.string().min(6, "Password must be at least 6 characters long")
 });
 
 export type User = z.infer<typeof userSchema>;

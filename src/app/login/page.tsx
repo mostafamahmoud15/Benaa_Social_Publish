@@ -16,6 +16,8 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginType, loginSchema } from "@/validation/validation";
 import { toastFlow } from "@/lib/toast";
+import { Eye, EyeOff } from "lucide-react";
+
 
 /**
  * Login page
@@ -26,6 +28,11 @@ export default function LoginPage() {
 
     // loading state while submitting
     const [loading, setLoading] = React.useState(false);
+
+    /**
+     * Toggle password visibility
+     */
+    const [showPass, setShowPass] = React.useState(false);
 
     const qc = useQueryClient();
 
@@ -112,24 +119,37 @@ export default function LoginPage() {
                         {/* Password field */}
                         <div className="space-y-2">
                             <Label htmlFor="password">Password</Label>
-
                             <Controller
-                                name="password"
                                 control={form.control}
+                                name="password"
                                 render={({ field, fieldState }) => (
                                     <>
-                                        <Input
-                                            id="password"
-                                            placeholder="••••••••"
-                                            type="password"
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                id="password"
+                                                type={showPass ? "text" : "password"}
+                                                placeholder="Enter password"
+                                                {...field}
+                                                className="pr-10"
+                                            />
 
-                                        {/* validation error */}
+                                            {/* Show / hide password button */}
+                                            <button
+                                                type="button"
+                                                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-muted"
+                                                onClick={() => setShowPass((s) => !s)}
+                                                aria-label="Toggle password"
+                                            >
+                                                {showPass ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                            </button>
+                                        </div>
+
                                         {fieldState.error && (
-                                            <p className="text-sm text-red-600">
-                                                {fieldState.error.message}
-                                            </p>
+                                            <p className="text-sm text-red-600">{fieldState.error.message}</p>
                                         )}
                                     </>
                                 )}
