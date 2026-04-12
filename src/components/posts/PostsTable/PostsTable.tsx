@@ -81,6 +81,7 @@ export default function PostsTable({ posts }: PostTableProps) {
             <TableHead className="w-40">Platforms</TableHead>
             <TableHead className="w-30">Status</TableHead>
             <TableHead className="w-105">Results</TableHead>
+            <TableHead className="w-55 text-right">Created By</TableHead>
             <TableHead className="w-55 text-right">Created</TableHead>
             <TableHead className="w-32 text-right">Actions</TableHead>
           </TableRow>
@@ -154,6 +155,11 @@ export default function PostsTable({ posts }: PostTableProps) {
                       />
                     );
                   })}
+                </TableCell>
+
+                {/* created By */}
+                <TableCell className="align-top text-right text-sm text-muted-foreground">
+                  {post.user.username}
                 </TableCell>
 
                 {/* created at */}
