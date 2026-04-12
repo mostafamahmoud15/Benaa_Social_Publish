@@ -30,33 +30,38 @@ function PlatformRow({
   return (
     <div
       className={cn(
-        "rounded-2xl border p-4 transition",
+        "rounded-2xl border p-4 transition overflow-hidden",
         checked ? "border-black bg-muted/40" : "border-border bg-white",
         disabled && "opacity-60"
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-start gap-3">
           {/* Platform checkbox */}
           <Checkbox
             checked={checked}
             disabled={disabled}
             onCheckedChange={(value) => onChange(Boolean(value))}
+            className="shrink-0"
           />
 
           {/* Platform icon */}
           {icon && (
-            <div className="mt-0.5 text-muted-foreground">
+            <div className="mt-0.5 shrink-0 text-muted-foreground">
               {icon}
             </div>
           )}
 
-          <div className="space-y-1">
-            <div className="text-sm font-medium">{label}</div>
+          <div className="min-w-0 space-y-1">
+            <div className="break-words text-sm font-medium">
+              {label}
+            </div>
 
             {/* Small helper text */}
             {hint && (
-              <p className="text-xs text-muted-foreground">{hint}</p>
+              <p className="break-words text-xs text-muted-foreground">
+                {hint}
+              </p>
             )}
           </div>
         </div>
@@ -64,7 +69,7 @@ function PlatformRow({
         {/* Connection status */}
         <Badge
           variant={connected ? "default" : "secondary"}
-          className="rounded-full"
+          className="w-fit max-w-full self-start rounded-full whitespace-normal break-words text-center sm:self-auto"
         >
           {connected ? connectedLabel : disconnectedLabel}
         </Badge>
