@@ -69,7 +69,7 @@ export default function CreatePostForm() {
     setValue,
     watch,
     handleSubmit,
-    formState: { isLoading },
+    formState: { isSubmitting },
   } = form;
 
   /**
@@ -187,7 +187,7 @@ export default function CreatePostForm() {
         <PostTargetsSection
           form={form}
           conn={conn}
-          isSubmitting={isLoading}
+          isSubmitting={isSubmitting}
           onPublish={() => {
             setValue("action", "publish", { shouldValidate: true });
             handleSubmit(onSubmit)();
